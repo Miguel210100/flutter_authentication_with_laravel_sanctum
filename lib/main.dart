@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_authentication_whith_laravel_sanctum/providers/auth.dart';
 import 'package:flutter_authentication_whith_laravel_sanctum/widgets/nav-drawer.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(create: (_) => Auth(), child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -12,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: MyHomePage(title: 'Sanctum Authentication'),
     );
@@ -42,7 +44,15 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       drawer: NavDrawer(),
-      body: Center(child: Text('You are not logged in')),
+      body: Center(child: Consumer<Auth>(
+        builder: (context, auth, child) {
+          if (auth.authenticated) {
+            return Text('You are logged in');
+          } else {
+            return Text('You are not logged in');
+          }
+        },
+      )),
     );
   }
 }
